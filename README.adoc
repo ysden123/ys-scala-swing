@@ -1,0 +1,6 @@
+= ys-scala-swing
+
+Playing with Scala Swing framework.
+
+== Examples
+The sources of the examples are based on https://github.com/scala/scala-swing/tree/main/examples/src/main/scala/scala/swing/examples[Examples, Git]
