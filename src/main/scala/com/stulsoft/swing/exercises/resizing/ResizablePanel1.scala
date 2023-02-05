@@ -6,7 +6,7 @@ package com.stulsoft.swing.exercises.resizing
 
 import scala.swing.*
 object ResizablePanel1 extends SimpleSwingApplication:
-  def top = new MainFrame {
+  def top: MainFrame = new MainFrame {
     title = "Resizable Panel Example 1"
     contents = new BorderPanel {
       layout(new Label("North")) = BorderPanel.Position.North
