@@ -4,6 +4,7 @@
 
 package com.stulsoft.swing.exercises.pconcurrency
 
+import java.awt.Cursor
 import javax.swing.SwingUtilities
 import scala.concurrent.{Future, Promise}
 import scala.swing.*
@@ -16,10 +17,12 @@ object ConcurrencyEx2 extends SimpleSwingApplication {
 
   override def top: Frame = new MainFrame {
     title = "ConcurrencyEx2"
+    var panel: Panel = _
     val l: Label = new Label("Initial text")
     val button: Button = new Button("Start") {
       reactions += {
         case ButtonClicked(_) =>
+          panel.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
           l.text = "Started a long process..."
           enabled = false
           SwingUtilities.invokeLater(() => {
@@ -27,15 +30,18 @@ object ConcurrencyEx2 extends SimpleSwingApplication {
               case Success(result) =>
                 l.text = result
                 enabled = true
+                panel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
               case Failure(exception) =>
                 l.text = s"Exception: ${exception.getMessage}"
                 enabled = true
+                panel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
             }
           })
       }
     }
 
-    contents = new FlowPanel(FlowPanel.Alignment.Center)(button, l)
+    panel = new FlowPanel(FlowPanel.Alignment.Center)(button, l)
+    contents = panel
     size = new Dimension(400, 600)
     centerOnScreen()
   }
@@ -43,18 +49,19 @@ object ConcurrencyEx2 extends SimpleSwingApplication {
 
 object LongWorkService2:
   given ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+
   private var counter = 0
 
-  def process(callback: String => Unit ): Future[String] =
+  def process(callback: String => Unit): Future[String] =
     val promise = Promise[String]
 
     Future[String] {
-      for(_ <- 1 to 10){
+      for (_ <- 1 to 10) {
         Thread.sleep(1_000)
         counter += 1
         callback(s"Counter = $counter")
       }
-        s"The text updated $counter times"
+      s"The text updated $counter times"
     }.onComplete {
       case Success(result) =>
         promise.success(result)
