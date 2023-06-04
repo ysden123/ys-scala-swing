@@ -5,10 +5,10 @@
 package com.stulsoft.swing.examples
 
 import java.awt.{Color, Graphics2D, Point, geom}
-
-import scala.swing.Swing.*
-import scala.swing.event.*
+import scala.swing.Swing._
+import scala.swing.event._
 import scala.swing.{Frame, MainFrame, Panel, SimpleSwingApplication}
+
 
 object LinePainting extends SimpleSwingApplication:
   lazy val ui: Panel = new Panel {
@@ -53,6 +53,7 @@ object LinePainting extends SimpleSwingApplication:
       g.draw(path)
     }
   }
+
   override def top: Frame = new MainFrame {
     title = "Simple Line Painting Demo"
     contents = ui
