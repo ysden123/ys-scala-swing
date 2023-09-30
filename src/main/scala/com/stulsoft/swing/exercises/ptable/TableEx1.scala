@@ -11,24 +11,17 @@ import scala.swing.event.TableRowsSelected
 
 object TableEx1 extends SimpleSwingApplication:
   def top: Frame = new MainFrame {
-    title = "Table Example"
+    title = "Table Ex1"
 
     // Sample data for the table
-    val rowData = Array(
-      Array("John", "Doe", 30),
-      Array("Jane", "Smith", 25),
-      Array("Bob", "Johnson", 40)
-    )
-
-    // Define column names
-    val columnNames = Seq("First Name", "Last Name", "Age")
-
-    // Create a Table component with data and column names
-    val tableModel = new javax.swing.table.DefaultTableModel(rowData, columnNames.toArray)
-    val table = new Table(rowData, columnNames) {
-      model = tableModel
-      selection.intervalMode = Table.IntervalMode.Single
-    }
+    val rowData:Array[Array[Any]] = Array.ofDim[Any](2,3)
+    rowData(0)(0) = "name1"
+    rowData(0)(1) = 765
+    rowData(0)(2) = 98.0
+    rowData(1)(0) = "name2"
+    rowData(1)(1) = 77
+    rowData(1)(2) = 55.0
+    val table = new Table(rowData, List("c1", "c2", "c3"))
 
     // Define a selection listener for the table
     listenTo(table.selection)
@@ -36,12 +29,13 @@ object TableEx1 extends SimpleSwingApplication:
       case TableRowsSelected(_, _, false) =>
         val selectedRow = table.selection.rows.leadIndex
         if (selectedRow >= 0) {
-          val firstName = tableModel.getValueAt(selectedRow, 0).toString
-          val lastName = tableModel.getValueAt(selectedRow, 1).toString
-          val age = tableModel.getValueAt(selectedRow, 2).toString.toInt
-          println(s"Selected: $firstName $lastName (Age: $age)")
+          println(s"Selected: $selectedRow")
+          if selectedRow < rowData.length then
+            rowData(selectedRow)(0)="Changed"
+            table.repaint()
         }
     }
+
 
     // Create a scroll pane to display the table if there are many rows
     val scrollPane = new ScrollPane(table)
